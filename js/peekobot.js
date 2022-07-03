@@ -6,30 +6,28 @@ const bot = function () {
     let restartButton = null;
 
     const sleep = function (ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+        return new Promise(resolve => setTimeout(resolve, ms)); // Temps d'attente avant un nouveau message
     };
 
-    const scrollContainer = function () {
+    const scrollContainer = function () { // Scrolling pour le chatbot
         inner.scrollTop = inner.scrollHeight;
     };
 
-    const insertNewChatItem = function (elem) {
-        //container.insertBefore(elem, peekobot);
+    const insertNewChatItem = function (elem) { // Insertion d'un nouveau élement pour le déroulé du chatbot
         peekobot.appendChild(elem);
         scrollContainer();
-        //debugger;
         elem.classList.add('activated');
     };
 
-    const printResponse = async function (step) {
+    const printResponse = async function (step) { // Fonction d'affichage de la réponse
         const response = document.createElement('div');
         response.classList.add('chat-response');
-        response.innerHTML = step.text;
+        response.innerHTML = step.text; 
         insertNewChatItem(response);
 
         await sleep(1500);
 
-        if (step.options) {
+        if (step.options) { // Si la réponse contient des options (réponse par bulle)
             const choices = document.createElement('div');
             choices.classList.add('choices');
             step.options.forEach(function (option) {
