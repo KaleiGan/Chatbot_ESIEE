@@ -18,7 +18,7 @@ const chat = {
         options: [
             {
                 text: '👋',
-                next: zone_C
+                next: 2
             }
         ]
     },

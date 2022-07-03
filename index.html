@@ -16,6 +16,8 @@
         integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
         crossorigin="anonymous"
         />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="style/web-speech.css">
 
         <!-- Peekobot custom properties (CSS variable) - set these! -->
         <style>
@@ -49,13 +51,37 @@
                     <div id="peekobot"></div>
                 </div>
             </div>
-            <a href="#" id="btnDemarrer" class="btn btn-success">Démarrer l'enregistrement</a>
-            <h4 id="results"></h4>
+            <div class="container mt-3">
+                <h3 class="text-center">Test de reconnaissance vocale</h3>
+                <div id="info"></div>
+                <div class="float-right">
+                  <button id="start_button">
+                    <img id="start_img" src="images/mic.gif" alt="Start"></button>
+                </div>
+                <div id="results">
+                  <span id="final_span" class="final"></span>
+                  <span id="interim_span" class="interim"></span>
+                  <p>
+                </div>
+                <div class="row col-12 p-0 m-0">
+                  <div class="row col-12 col-md-8 col-lg-6 p-0 m-0">
+                      <select id="select_language"></select>
+                      <select id="select_dialect"></select>
+                  </div>
+                  <div class="col-12 col-md-4 col-lg-6 mt-3 mt-md-0 p-0 m-0">
+                    <div class="float-right">
+                      <button id="copy_button" class="btn btn-primary ">Copy</button>
+                    </div>
+                  </div>
+                </div>
+  
+            </div>
         </main>
         <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-        <script type="text/javascript" src="./app.js"></script>
-        <script src="conversation.js"></script>
-        <script data-presets="es2015,es2016,es2017" src="peekobot.js"></script>
+        <script src="js/conversation.js"></script>
+        <script data-presets="es2015,es2016,es2017" src="js/peekobot.js"></script>
+        <script src="js/languages.js"></script>
+        <script src="js/web-speech-api.js"></script>
     </body>
 </html>
