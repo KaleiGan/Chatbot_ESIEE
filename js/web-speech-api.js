@@ -154,7 +154,7 @@ function updateCountry()
 function upgrade() 
 {
   start_button.style.visibility = 'hidden';
-  showInfo('upgrade');
+  showInfo('upgrade'); 
 }
 
 var two_line = /\n\n/g;
