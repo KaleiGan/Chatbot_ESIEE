@@ -3,10 +3,6 @@ function entierAleatoire(min, max)
  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var $btnDemarrer = $('#btnDemarrer');
-var _$results = $('#results');
-var test = document.getElementById('results').textContent;
-
 var zone_A = entierAleatoire(1, 100);
 var zone_b = entierAleatoire(101, 199);
 var zone_C = entierAleatoire(200, 210);
@@ -139,17 +135,6 @@ const chat = {
               next: 111
           }
       ]
-    
 
     },
-    1000: {
-        
-        text:'Q:7/10 : On va tester ton oral, dis moi le mot "Chanter" en anglais ?',
-        next: 111
-      },
-
-    111: {
-            text: test
-      },
-
 };

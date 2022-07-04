@@ -1,11 +1,13 @@
-const bot = function () {
+const bot = function () 
+{
 
     const peekobot = document.getElementById('peekobot');
     const container = document.getElementById('peekobot-container');
     const inner = document.getElementById('peekobot-inner');
     let restartButton = null;
 
-    const sleep = function (ms) {
+    const sleep = function (ms) 
+    {
         return new Promise(resolve => setTimeout(resolve, ms)); // Temps d'attente avant un nouveau message
     };
 

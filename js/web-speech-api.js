@@ -1,32 +1,32 @@
 var messages = {
   "start": {
-    msg: 'Clickez sur le microphone a gauche du carré blanc pour commencer à s\'enregistrer',
+    msg: 'Clicker sur le microphone a droite du carré blanc pour commencer à s\'enregistrer',
     class: 'alert-success'},
-  "speak_now": {
+  "speak": {
     msg: 'Vous pouvez parler',
     class: 'alert-success'},
-  "no_speech": {
+  "no_speak": {
     msg: 'Vous n\'avez pas parler <a href="//support.google.com/chrome/answer/2693767" target="_blank">microphone settings</a>.',
     class: 'alert-danger'},
   "no_microphone": {
     msg: 'Aucun microphone n\'a été detecté',
     class: 'alert-danger'},
-  "allow": {
-    msg: 'Clickez sur "Autoriser" pour autoriser l\'utilisation du microphone',
+  "autoriser": {
+    msg: 'Clicker sur "Autoriser" pour autoriser l\'utilisation du microphone',
     class: 'alert-warning'},
-  "denied": {
+  "refuse": {
     msg: 'La permission a été refusé, vous ne pouvez pas utiliser le microphone !',
     class: 'alert-danger'},
-  "blocked": {
+  "bloquer": {
     msg: 'La permission pour l\'utilisation du microphone à été bloqué, allez dans les paramètres de Google Chrome pour l\'autoriser.',
     class: 'alert-danger'},
   "upgrade": {
     msg: 'La reconnaissance vocale n\'est pas supporter sur ce navigateur.',
     class: 'alert-danger'},
   "stop": {
-      msg: 'Stop listening, click on the microphone icon to restart',
+      msg: 'Arret de l\'écoute, ré-appuyez sur le bouton pour continuer a vous enregistrer',
       class: 'alert-success'},
-  "copy": {
+  "copie": {
     msg: 'Le contenu a été copié avec succès',
     class: 'alert-success'},
 }
@@ -37,62 +37,78 @@ var ignore_onend;
 var start_timestamp;
 var recognition;
 
-$( document ).ready(function() {
-  for (var i = 0; i < langs.length; i++) {
-    select_language.options[i] = new Option(langs[i][0], i);
+$( document ).ready(function() 
+{
+  for (var i = 0; i < langs.length; i++) 
+  {
+    select_language.options[i] = new Option(langs[i][0], i); 
   }
   select_language.selectedIndex = 6;
   updateCountry();
   select_dialect.selectedIndex = 6;
   
-  if (!('webkitSpeechRecognition' in window)) {
-    upgrade();
-  } else {
+  if (!('webkitSpeechRecognition' in window)) // Si la reconnaissance vocale n'est pas disponible
+  {
+    upgrade(); 
+  } 
+  else 
+  {
     showInfo('start');  
     start_button.style.display = 'inline-block';
     recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
 
-    recognition.onstart = function() {
+    recognition.onstart = function() 
+    {
       recognizing = true;
-      showInfo('speak_now');
+      showInfo('speak');
       start_img.src = 'images/mic-animation.gif';
     };
 
-    recognition.onerror = function(event) {
-      if (event.error == 'no-speech') {
+    recognition.onerror = function(event) 
+    {
+      if (event.error == 'no-speech') 
+      {
         start_img.src = 'images/mic.gif';
         showInfo('no_speech');
         ignore_onend = true;
       }
-      if (event.error == 'audio-capture') {
+      if (event.error == 'audio-capture') 
+      {
         start_img.src = 'images/mic.gif';
         showInfo('no_microphone');
         ignore_onend = true;
       }
-      if (event.error == 'not-allowed') {
-        if (event.timeStamp - start_timestamp < 100) {
-          showInfo('blocked');
-        } else {
-          showInfo('denied');
+      if (event.error == 'not-allowed') 
+      {
+        if (event.timeStamp - start_timestamp < 100) 
+        {
+          showInfo('bloquer');
+        } else 
+        {
+          showInfo('refuse');
         }
         ignore_onend = true;
       }
     };
 
-    recognition.onend = function() {
+    recognition.onend = function() 
+    {
       recognizing = false;
-      if (ignore_onend) {
+      if (ignore_onend) 
+      {
         return;
       }
       start_img.src = 'images/mic.gif';
-      if (!final_transcript) {
+      if (!final_transcript) 
+      {
         showInfo('start');
         return;
       }
       showInfo('stop');
-      if (window.getSelection) {
+      if (window.getSelection) 
+      {
         window.getSelection().removeAllRanges();
         var range = document.createRange();
         range.selectNode(document.getElementById('final_span'));
@@ -102,10 +118,13 @@ $( document ).ready(function() {
 
     recognition.onresult = function(event) {
       var interim_transcript = '';
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
+      for (var i = event.resultIndex; i < event.results.length; ++i) 
+      {
+        if (event.results[i].isFinal) 
+        {
           final_transcript += event.results[i][0].transcript;
-        } else {
+        } else 
+        {
           interim_transcript += event.results[i][0].transcript;
         }
       }
@@ -117,36 +136,44 @@ $( document ).ready(function() {
 });
 
 
-function updateCountry() {
-  for (var i = select_dialect.options.length - 1; i >= 0; i--) {
+function updateCountry() 
+{
+  for (var i = select_dialect.options.length - 1; i >= 0; i--) 
+  {
     select_dialect.remove(i);
   }
   var list = langs[select_language.selectedIndex];
-  for (var i = 1; i < list.length; i++) {
+  for (var i = 1; i < list.length; i++) 
+  {
     select_dialect.options.add(new Option(list[i][1], list[i][0]));
   }
   select_dialect.style.visibility = list[1].length == 1 ? 'hidden' : 'visible';
 }
 
 
-function upgrade() {
+function upgrade() 
+{
   start_button.style.visibility = 'hidden';
   showInfo('upgrade');
 }
 
 var two_line = /\n\n/g;
 var one_line = /\n/g;
-function linebreak(s) {
+function linebreak(s) 
+{
   return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
 }
 
 var first_char = /\S/;
-function capitalize(s) {
+function capitalize(s) 
+{
   return s.replace(first_char, function(m) { return m.toUpperCase(); });
 }
 
-$("#copy_button").click(function () {
-  if (recognizing) {
+$("#copy_button").click(function () 
+{
+  if (recognizing) 
+  {
     recognizing = false;
     recognition.stop();
   }
@@ -154,24 +181,30 @@ $("#copy_button").click(function () {
   
 });
 
-function copyToClipboard() {
-  if (document.selection) { 
+function copyToClipboard() 
+{
+  if (document.selection) 
+  { 
       var range = document.body.createTextRange();
       range.moveToElementText(document.getElementById('results'));
       range.select().createTextRange();
-      document.execCommand("copy"); 
+      document.execCommand("copie"); 
   
-  } else if (window.getSelection) {
+  } 
+  else if (window.getSelection) 
+  {
       var range = document.createRange();
        range.selectNode(document.getElementById('results'));
        window.getSelection().addRange(range);
-       document.execCommand("copy");
+       document.execCommand("copie");
   }
-  showInfo('copy');
+  showInfo('copie');
 }
 
-$("#start_button").click(function () {
-  if (recognizing) {
+$("#start_button").click(function () 
+{
+  if (recognizing) 
+  {
     recognition.stop();
     return;
   }
@@ -182,22 +215,27 @@ $("#start_button").click(function () {
   final_span.innerHTML = '';
   interim_span.innerHTML = '';
   start_img.src = 'images/mic-slash.gif';
-  showInfo('allow');
+  showInfo('autoriser');
   start_timestamp = event.timeStamp;
 });
 
-$("#select_language").change(function () {
+$("#select_language").change(function () 
+{
   updateCountry();
 });
 
-function showInfo(s) {
-  if (s) {
+function showInfo(s) 
+{
+  if (s) 
+  {
     var message = messages[s];
     $("#info").html(message.msg);
     $("#info").removeClass();
     $("#info").addClass('alert');
     $("#info").addClass(message.class);
-  } else {
+  } 
+  else 
+  {
     $("#info").removeClass();
     $("#info").addClass('d-none');
   }
