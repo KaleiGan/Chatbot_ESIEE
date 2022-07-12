@@ -1,30 +1,25 @@
-const bot = function () 
-{
+const bot = function () {
 
     const peekobot = document.getElementById('peekobot');
     const container = document.getElementById('peekobot-container');
     const inner = document.getElementById('peekobot-inner');
     let restartButton = null;
 
-    const sleep = function (ms) 
-    {
+    const sleep = function (ms) {
         return new Promise(resolve => setTimeout(resolve, ms)); // Temps d'attente avant un nouveau message
     };
 
-    const scrollContainer = function () 
-    { // Scrolling pour le chatbot
+    const scrollContainer = function () { // Scrolling pour le chatbot
         inner.scrollTop = inner.scrollHeight;
     };
 
-    const insertNewChatItem = function (elem) 
-    { // Insertion d'un nouveau élement pour le déroulé du chatbot
+    const insertNewChatItem = function (elem) { // Insertion d'un nouveau élement pour le déroulé du chatbot
         peekobot.appendChild(elem);
         scrollContainer();
         elem.classList.add('activated');
     };
 
-    const printResponse = async function (step) 
-    { // Fonction d'affichage de la réponse
+    const printResponse = async function (step) { // Fonction d'affichage de la réponse
         const response = document.createElement('div');
         response.classList.add('chat-response');
         response.innerHTML = step.text; 
@@ -32,59 +27,48 @@ const bot = function ()
 
         await sleep(1500);
 
-        if (step.options) 
-        { // Si la réponse contient des options (réponse par bulle)
+        if (step.options) { // Si la réponse contient des options (réponse par bulle)
             const choices = document.createElement('div');
             choices.classList.add('choices');
-            step.options.forEach(function (option) 
-            {
+            step.options.forEach(function (option) {
                 const button = document.createElement(option.url ? 'a' : 'button');
-                button.classList.add('choice');  
+                button.classList.add('choice');
                 button.innerHTML = option.text;
-                if (option.url) 
-                {
+                if (option.url) {
                     button.href = option.url;
-                } else 
-                {
+                } else {
                     button.dataset.next = option.next;
                 }
                 choices.appendChild(button);
             });
             insertNewChatItem(choices);
-        } else if (step.next) 
-        {
+        } else if (step.next) {
             printResponse(chat[step.next]);
         }
     };
 
-    const printChoice = function (choice) 
-    {
+    const printChoice = function (choice) {
         const choiceElem = document.createElement('div');
         choiceElem.classList.add('chat-ask');
         choiceElem.innerHTML = choice.innerHTML;
         insertNewChatItem(choiceElem);
     };
 
-    const disableAllChoices = function () 
-    {
+    const disableAllChoices = function () {
         const choices = document.querySelectorAll('.choice');
-        choices.forEach(function (choice) 
-        {
+        choices.forEach(function (choice) {
             choice.disabled = 'disabled';
         });
         return;
     };
 
-    const handleChoice = async function (e) 
-    {
+    const handleChoice = async function (e) {
 
-        if (!e.target.classList.contains('choice') || 'A' === e.target.tagName) 
-        {
-            // Si la cible n'est pas un bouton
+        if (!e.target.classList.contains('choice') || 'A' === e.target.tagName) {
+            // Target isn't a button, but could be a child of a button.
             var button = e.target.closest('#peekobot-container .choice');
 
-            if (button !== null) 
-            {
+            if (button !== null) {
                 button.click();
             }
 
@@ -99,27 +83,23 @@ const bot = function ()
         printChoice(choice);
         scrollContainer();
 
-        await sleep(1500); // Attente de 1.5 sec
+        await sleep(1500);
 
-        if (choice.dataset.next) 
-        {
+        if (choice.dataset.next) {
             printResponse(chat[choice.dataset.next]);
         }
-        // Désactivation des boutons pour ne pas avoir de choix multiple
+        // Need to disable buttons here to prevent multiple choices
     };
 
-    const handleRestart = function () 
-    {
+    const handleRestart = function () {
         startConversation();
     }
 
-    const startConversation = function () 
-    {
-        printResponse(chat[1]); // Affichage du premier message 
+    const startConversation = function () {
+        printResponse(chat[1]);
     }
 
-    const init = function () 
-    {
+    const init = function () {
         container.addEventListener('click', handleChoice);
 
         restartButton = document.createElement('button');
